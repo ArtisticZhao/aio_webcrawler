@@ -28,7 +28,6 @@ def get_index(url):
 
     trs = soup.find_all('a')  # 获取全部超链接
     trs_l = list()
-    is_header = False
     for each in trs:
         # 通过匹配地址中十分包含sdat来判断是否为卫星链接
         try:
@@ -41,6 +40,7 @@ def get_index(url):
 
 
 async def get_chapter(url):
+
     global errors
     try:
         kv = {'user-agent': 'Mozilla/5.0'}
@@ -71,7 +71,7 @@ async def get_chapter(url):
         p_div = soup.find('div', {'id': 'contimg'})
         if p_div is not None:
             ps = p_div.find_all('img')
-            if len(ps)>0:
+            if len(ps) > 0:
                 p = ps[0].attrs['src']
             else:
                 print("find mult pics")
@@ -91,7 +91,6 @@ async def get_chapter(url):
         print('traceback.format_exc():\n{}'.format(traceback.format_exc()))
 
 
-
 def test_get(url):
     kv = {'user-agent': 'Mozilla/5.0'}
     r = requests.get(url, headers=kv)
@@ -106,7 +105,7 @@ def test_get(url):
 # if __name__ == '__main__':
 #     test_get('https://space.skyrocket.de/doc_sdat/starlink-v1-0.htm')
 if __name__ == "__main__":
-    IS_INDEX = False
+    IS_INDEX = True
     GET_ERROR = False
     if IS_INDEX:
         l = get_index('https://space.skyrocket.de/doc_chr/lau1957.htm')

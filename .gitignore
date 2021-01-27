@@ -1,0 +1,9 @@
+doc*
+img*
+.venv
+errors.txt
+all_satellites_urls
+*.csv
+*.xlsx
+*.zip
+
