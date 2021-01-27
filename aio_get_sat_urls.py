@@ -65,9 +65,14 @@ def get_all_sat_url():
 
     # 进行重复计数
     counter = Counter(all_satellites_urls)
+
     # 只筛选出重复的内容， 并返回
-    mult = [key for key, value in counter.items()if value == 1]
+    mult = [key for key, value in counter.items()if value > 1]
     return mult
+
+    # 只帅选出单星URL
+    #  solo = [key for key, value in counter.items()if value == 1]
+    #  return solo
 
 
 if __name__ == "__main__":

@@ -15,7 +15,7 @@ from bs4.element import NavigableString
 from tqdm import tqdm
 
 
-IS_SOLO = True  # 这个变量用于控制单星或者系列星的CSV存储模式 True时保存到同一个CSV文件中
+IS_SOLO = False  # 这个变量用于控制单星或者系列星的CSV存储模式 True时保存到同一个CSV文件中
 Threads_N = 50  # 协程任务数
 
 TABLE_HEADER = ['原名', '国籍', '任务类型', 'Operator', '研发机构',
@@ -23,7 +23,22 @@ TABLE_HEADER = ['原名', '国籍', '任务类型', 'Operator', '研发机构',
                 'Satellite', '国际卫星标识符', '发射日期', '发射基地', '', '运载火箭', '备注',
                 'pic_name']
 
+TABLE_HEADER_NEW = ['中文名称', '英文名称', '别名', '系列名', '每颗名', '国籍', '任务类型', '研发机构',
+                    '设计寿命', '质量',  '轨道类型', '轨道高度', '轨道倾角',
+                    '国际卫星标识符', '发射日期', '发射基地', '', '运载火箭', '备注',
+                    ]
+
 errors = []
+
+
+def fit_header(data_basic, data_more):
+    '''
+    To fix the TABLE_HEADER_NEW add or delete some columns
+    '''
+    csv_column = ['', '', '', data_basic[0], data_more[0], data_basic[1], data_basic[2], data_basic[4],
+                  data_basic[9], data_basic[10], '', data_basic[11], '',
+                  data_more[1], data_more[2], data_more[3], data_more[4], data_more[5], data_more[6]]
+    return csv_column
 
 
 async def get_info(url):
@@ -123,12 +138,12 @@ async def get_info(url):
         else:
             f = await aiofiles.open('doc/{}.csv'.format(filename), 'w', encoding="utf-8", newline='')  # 解决文件换行问题
             w = AsyncWriter(f)
-            await w.writerow(TABLE_HEADER)
+            await w.writerow(TABLE_HEADER_NEW)
 
         for line in data_more:
             if len(line) == 0:
                 continue
-            await w.writerow(data_basic + line + img_name)
+            await w.writerow(fit_header(data_basic, line))
         await f.close()
     except Exception as e:
         print('[Error] in {}:\n{}'.format(url, str(e)))
